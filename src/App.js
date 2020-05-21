@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
+import {Route, BrowserRouter as Router} from 'react-router-dom';
+
+import App1 from './App1';
 
 class App extends Component {
   render() {
     return (
-      <div>
-          <h1>react TEST @@</h1>
-      </div>
+      <Router>
+          <div>
+            <Route exact path ="/" component={App1}/>
+            <Route exact path ="/App1" component={App1}/>
+          </div>
+      </Router>  
     );
   }
 }
