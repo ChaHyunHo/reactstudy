@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Route, BrowserRouter as Router} from 'react-router-dom';
 
 import App1 from './App1';
+import App2 from './App2';
+import App3 from './App3';
 
 class App extends Component {
   render() {
@@ -10,6 +12,8 @@ class App extends Component {
           <div>
             <Route exact path ="/" component={App1}/>
             <Route exact path ="/App1" component={App1}/>
+            <Route exact path ="/App2" component={App2}/>
+            <Route exact path ="/App3" component={App3}/>
           </div>
       </Router>  
     );
