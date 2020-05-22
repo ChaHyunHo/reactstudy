@@ -28,13 +28,13 @@ class App3 extends Component {
                   <tr align="center">
                     <td width="50">No.</td>
                     <td width="300">Title</td> 
-                    <td width="100">Name</td> 
-                    <td width="100">Date</td>
+                    <td width="120">Name</td> 
+                    <td width="120">Date</td>
                   </tr>
                   {
                     boards.map(row =>
                         (<BoardItem key={row.bno} row={row}/>)
-                      )
+                    )
                   }
                 </tbody>
              </table>
@@ -42,12 +42,17 @@ class App3 extends Component {
     );
   }
 }
-
+/**
+ * 컴포넌트 자신이 사용하는 것은 state이고, 부모로부터 받은 것은 props이다. 이 개념을 잘 이해하면
+ * React의 주요 개념 절반을 이해한 것이다. BoardItem 컴포넌트를 사용하는 것은 React의 특징으로
+ * React에서는 모든 기능을 컴포넌트로 구현하여 사용한다. 
+ */
+ 
 class BoardItem extends React.Component {
   render() {
-    return(
-      <tr>
-          <td>{this.props.row.bno}</td>
+    return( 
+      <tr>  
+          <td>{this.props.row.bno}</td> 
           <td>{this.props.row.title}</td>
           <td>{this.props.row.writer}</td>
           <td>{this.props.row.date.toLocaleDateString('ko-KR')}</td>
