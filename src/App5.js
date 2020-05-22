@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
 class App5 extends Component {
+  constructor(props) {
+    super(props);
+    this.child = React.createRef();
+    }
+
     state = {     // 이 변수는 게시판 데이터를 배열로 가지는 boards 배열을 구성원으로 가진다.
         maxNo: 3,
         boards : [
@@ -22,11 +27,17 @@ class App5 extends Component {
     handleSaveData = (data) => {
       let boards = this.state.boards;
       if (data.bno ===null || data.bno==='' || data.bno===undefined) {    // new : Insert
+        /*
         this.setState({
           boards: boards.concat({
             maxNo: this.state.maxNo + 1, 
             bno: this.state.maxNo++, date: new Date(), ...data }) 
           });
+        */
+        this.setState({
+          maxNo: this.state.maxNo+1,
+          boards: boards.concat({bno: this.state.maxNo, date: new Date(), ...data })
+        });
       } else {
         this.setState({
           boards : boards.map(row => data.bno === row.bno ? {...data}: row)
@@ -44,13 +55,12 @@ class App5 extends Component {
       this.child.current.handleSelectRow(row);
     }
 
-
   render() { // React에서 render는 화면을 생성하기 위해 실행하는 이벤트이다.
     const {boards} = this.state;
     // return 이전이 자바스크립트
     return (
           <div>
-            <BoardForm onSaveData = {this.handleSaveData}/>
+            <BoardForm onSaveData = {this.handleSaveData} ref={this.child} />
             <table border="1">
                 <tbody>
                   <tr align="center">
@@ -91,7 +101,7 @@ class BoardItem extends React.Component {
     return( 
       <tr>  
           <td>{this.props.row.bno}</td> 
-          <td>{this.props.row.title}</td>
+          <td><a onClick={this.handleSelectRow}>{this.props.row.title}</a></td>
           <td>{this.props.row.writer}</td>
           <td>{this.props.row.date.toLocaleDateString('ko-KR')}</td>
           <td><button onClick={this.handleDeleteData}>X</button></td>
@@ -104,7 +114,15 @@ class BoardItem extends React.Component {
  * 글쓰기 기능을 구현시 BoardForm 컴포넌트를 생성하고
  */
 class BoardForm extends React.Component {
-  state = {} // state는 BoardForm 내부에서 사용하는 state, state는 컴포넌트 내부에서 사용할 변수로 이름이 고정되어 있다.
+  state = {
+    writer : '',
+    title  : '' 
+
+  } // state는 BoardForm 내부에서 사용하는 state, state는 컴포넌트 내부에서 사용할 변수로 이름이 고정되어 있다.
+
+  handleSelectRow = (row) => {
+    this.setState(row);
+  }
 
   handleChange = (e) => {  // e는 자바스크립트의 change 이벤트에서 파라미터로 넘어오는 Event를 의미하고 
     this.setState({
@@ -116,14 +134,18 @@ class BoardForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault(); // 실제로 서버로 값을 전송하지 않기때문에 이벤트를 중지.
     this.props.onSaveData(this.state); // onSaveData() 함수는 BoardForm 컴포넌트에 있지 않고 부모인 App 컴포넌트에 있기 때문에 this.prop를 사용, handleChange에서 입력된 값을 다시 this.state로 가져옴
-    this.setState({});
+    this.setState({
+        bno : '',
+        writer : '',
+        title : ''
+    });
   }
 
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <input placeholder="title" name="title" onChange={this.handleChange}/>
-        <input placeholder="name" name="writer" onChange={this.handleChange}/>
+        <input placeholder="title" name="title" value={this.state.title} onChange={this.handleChange}/>
+        <input placeholder="name" name="writer" value={this.state.writer} onChange={this.handleChange}/>
         <button type="submit">Save</button>
       </form>
     );
