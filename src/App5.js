@@ -20,13 +20,15 @@ class App5 extends Component {
             writer : 'Suck so',
             title  : 'Hi Hello ',
             date   : new Date()
-          }        
-        ]
+          }
+        ],
+        selectedBoard:{}      
+        
     }
 
     handleSaveData = (data) => {
       let boards = this.state.boards;
-      if (data.bno ===null || data.bno==='' || data.bno===undefined) {    // new : Insert
+      if (!data.bno) {  // new : Insert
         /*
         this.setState({
           boards: boards.concat({
@@ -35,12 +37,14 @@ class App5 extends Component {
           });
         */
         this.setState({
-          maxNo: (this.state.maxNo)+1,
-          boards: boards.concat({bno: this.state.maxNo, date: new Date(), ...data })
+          maxNo: this.state.maxNo+1,
+          boards: this.state.boards.concat({bno: this.state.maxNo, date: new Date(), ...data }),
+          selectedBoard: {}
         });
       } else {
         this.setState({
-          boards : boards.map(row => data.bno === row.bno ? {...data}: row)
+          boards : boards.map(row => data.bno === row.bno ? {...data}: row),
+          selectedBoard: {}
         })
       }
     }
@@ -52,7 +56,7 @@ class App5 extends Component {
     }
 
     handleSelectRow = (row) => {
-      this.child.current.handleSelectRow(row);
+      this.child.current.handleSelectRow(this.setState({selectedBoard:row}));
     }
 
   render() { // React에서 render는 화면을 생성하기 위해 실행하는 이벤트이다.
@@ -127,7 +131,7 @@ class BoardForm extends React.Component {
   }
 
   handleSelectRow = (row) => {
-    this.setState(row);
+    this.setState({selectedBoard:row});
   }
 
 
@@ -136,7 +140,6 @@ class BoardForm extends React.Component {
     e.preventDefault(); // 실제로 서버로 값을 전송하지 않기때문에 이벤트를 중지.
     this.props.onSaveData(this.state); // onSaveData() 함수는 BoardForm 컴포넌트에 있지 않고 부모인 App 컴포넌트에 있기 때문에 this.prop를 사용, handleChange에서 입력된 값을 다시 this.state로 가져옴
     this.setState({
-      bno:'',
       writer:'',
       title:''
     });
