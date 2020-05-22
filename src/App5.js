@@ -35,7 +35,7 @@ class App5 extends Component {
           });
         */
         this.setState({
-          maxNo: this.state.maxNo+1,
+          maxNo: (this.state.maxNo)+1,
           boards: boards.concat({bno: this.state.maxNo, date: new Date(), ...data })
         });
       } else {
@@ -120,24 +120,25 @@ class BoardForm extends React.Component {
 
   } // state는 BoardForm 내부에서 사용하는 state, state는 컴포넌트 내부에서 사용할 변수로 이름이 고정되어 있다.
 
-  handleSelectRow = (row) => {
-    this.setState(row);
-  }
-
   handleChange = (e) => {  // e는 자바스크립트의 change 이벤트에서 파라미터로 넘어오는 Event를 의미하고 
     this.setState({
       [e.target.name]: e.target.value // e.target은 현재 이벤트가 발생한 개체(값을 입력하는 입력상자를 의미한다.)
     })
   }
 
+  handleSelectRow = (row) => {
+    this.setState(row);
+  }
+
+
   // 부모로부터 받은 것은 값이든 함수이든 항상 props를 사용해야 한다.
   handleSubmit = (e) => {
     e.preventDefault(); // 실제로 서버로 값을 전송하지 않기때문에 이벤트를 중지.
     this.props.onSaveData(this.state); // onSaveData() 함수는 BoardForm 컴포넌트에 있지 않고 부모인 App 컴포넌트에 있기 때문에 this.prop를 사용, handleChange에서 입력된 값을 다시 this.state로 가져옴
     this.setState({
-        bno : '',
-        writer : '',
-        title : ''
+      bno:'',
+      writer:'',
+      title:''
     });
   }
 
