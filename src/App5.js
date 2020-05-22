@@ -20,16 +20,30 @@ class App5 extends Component {
     }
 
     handleSaveData = (data) => {
-      this.setState({
-        boards: this.state.boards.concat({ bno: this.state.maxNo++, date: new Date(), ...data })
-    });
-
+      let boards = this.state.boards;
+      if (data.bno ===null || data.bno==='' || data.bno===undefined) {    // new : Insert
+        this.setState({
+          boards: boards.concat({
+            maxNo: this.state.maxNo + 1, 
+            bno: this.state.maxNo++, date: new Date(), ...data }) 
+          });
+      } else {
+        this.setState({
+          boards : boards.map(row => data.bno === row.bno ? {...data}: row)
+        })
+      }
+    }
+    
     handleDeleteData = (bno) => {
       this.setState({
         boards: this.state.boards.filter(row => row.bno !== bno)
       })
     }
-  }
+
+    handleSelectRow = (row) => {
+      this.child.current.handleSelectRow(row);
+    }
+
 
   render() { // React에서 render는 화면을 생성하기 위해 실행하는 이벤트이다.
     const {boards} = this.state;
@@ -48,7 +62,7 @@ class App5 extends Component {
                   </tr>
                   {
                     boards.map(row =>
-                        (<BoardItem key={row.bno} row={row}/>)
+                        (<BoardItem key={row.bno} row={row} onRemove={this.handleDeleteData} onSelectRow={this.handleSelectRow} />)
                     )
                   }
               </tbody>
@@ -63,6 +77,16 @@ class App5 extends Component {
  * React에서는 모든 기능을 컴포넌트로 구현하여 사용한다. 
  */
 class BoardItem extends React.Component {
+  handleDeleteData = () => {
+    const {row, onRemove} = this.props;
+    onRemove(row.bno);
+  }
+
+  handleSelectRow = () => {
+    const { row, onSelectRow } = this.props;
+    onSelectRow(row);
+  }    
+
   render() {
     return( 
       <tr>  
